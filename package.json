@@ -9,6 +9,13 @@
     "preview": "astro preview"
   },
   "devDependencies": {
-    "astro": "^0.20.4"
+    "@snowpack/plugin-postcss": "^1.4.3",
+    "astro": "^0.20.4",
+    "cssnano": "^5.0.8",
+    "postcss": "^8.3.6",
+    "postcss-functions": "^4.0.2",
+    "postcss-import": "^14.0.2",
+    "postcss-mixins": "^8.1.0",
+    "postcss-preset-env": "^6.7.0"
   }
 }
