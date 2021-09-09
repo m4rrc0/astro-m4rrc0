@@ -1,17 +1,20 @@
 ---
 import '../styles/global.css';
+import BaseSeoLayout from './BaseSeoLayout.astro'
 ---
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <!-- <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width"
-    />
+    /> -->
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    
+    <!-- <link rel="icon" type="image/x-icon" href="/favicon.ico" /> -->
+
+    <BaseSeoLayout />
+
     <slot name="head" />
   </head>
   <body>

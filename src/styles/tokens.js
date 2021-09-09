@@ -12,14 +12,14 @@ const sizeScaleRatio = functions.sizeScaleRatio(
 module.exports = {
   environmentVariables: {
     /* --- FONTS --- */
-    '--font-body-prefered': 'sans-serif', //* 'Literata', 'Recursive' */
-    '--font-body-critical': 'sans-serif', //* 'LiterataCritical' */
+    '--font-body-prefered': 'Literata', //* 'Literata', 'Recursive' */
+    '--font-body-critical': 'LiterataCritical', //* 'LiterataCritical' */
     '--font-body-fallback': 'sans-serif',
-    '--font-heading-prefered': 'sans-serif', //* 'Josefin Sans', 'Recursive' */
-    '--font-heading-critical': 'sans-serif', //* 'JosefinSansCritical', 'RecursiveCritical' */
+    '--font-heading-prefered': 'Josefin Sans', //* 'Josefin Sans', 'Recursive' */
+    '--font-heading-critical': 'JosefinSansCritical', //* 'JosefinSansCritical', 'RecursiveCritical' */
     '--font-heading-fallback': 'sans-serif',
-    '--font-mono-prefered': 'monospace', //* 'Fira Code', 'Recursive' */
-    '--font-mono-critical': 'monospace', //* 'FiraCodeCritical' */
+    '--font-mono-prefered': 'Fira Code', //* 'Fira Code', 'Recursive' */
+    '--font-mono-critical': 'FiraCodeCritical', //* 'FiraCodeCritical' */
     '--font-mono-fallback': 'monospace',
 
     /* --- SIZES --- */
