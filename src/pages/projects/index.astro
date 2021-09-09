@@ -1,0 +1,28 @@
+---
+// Component Imports
+import SkeletonLayout from '../../layouts/SkeletonLayout.astro'
+import BasicPageLayout from '../../layouts/BasicPageLayout.astro'
+import SEO from '../../components/SEO.svelte'
+---
+
+<SkeletonLayout>
+  <SEO
+    slot="head"
+    lang="en"
+    ogType="website"
+    siteName="m4rr.co"
+    title="Projects"
+    description="What I am working on"
+    canonicalUrl="https://www.m4rr.co/projects/" />
+  
+  <BasicPageLayout>
+    <div>
+      <h1>Things I am working on</h1>
+      <ul>
+        <li>
+          <a href="/projects/personal-web/">The Personal Web</a>
+        </li>
+      </ul>
+    </div>
+  </BasicPageLayout>
+</SkeletonLayout>

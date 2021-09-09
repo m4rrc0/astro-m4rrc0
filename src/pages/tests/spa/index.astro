@@ -1,0 +1,12 @@
+---
+import SkeletonLayout from '../../../layouts/SkeletonLayout.astro'
+import BasicPageLayout from '../../../layouts/BasicPageLayout.astro'
+// import SEO from '../../components/SEO.svelte'
+import Spa from '../../../partials/Spa.svelte'
+---
+
+<SkeletonLayout>
+  <BasicPageLayout>
+    <Spa url="/tests/spa/" />
+  </BasicPageLayout>
+</SkeletonLayout>

@@ -1,0 +1,33 @@
+---
+import SkeletonLayout from '../../layouts/SkeletonLayout.astro'
+import BasicPageLayout from '../../layouts/BasicPageLayout.astro'
+import SEO from '../../components/SEO.svelte'
+import JsColorTest from '../../partials/JsColorTest.svelte'
+---
+
+<SkeletonLayout>
+  <SEO
+    slot="head"
+    lang="en"
+    ogType="website"
+    siteName="m4rr.co"
+    title="Tests"
+    description="Testing area for the tools I am building to create your personal
+    web space"
+    canonicalUrl="https://www.m4rr.co/tests/" />
+  
+  <BasicPageLayout>
+    <div>
+      <h1>Things I am experimenting with</h1>
+
+      <ul>
+        <li>
+          <a href="/tests/spa/">SPA mode for this static site builder</a>
+        </li>
+      </ul>
+
+      <JsColorTest client:idle />
+    </div>
+  </BasicPageLayout>
+
+</SkeletonLayout>
