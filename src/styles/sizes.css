@@ -44,7 +44,7 @@ the size-... is the fluid value bound within a min and max IF the browser suppor
 */
 
 body,
-*[class*='size-context-'] {
+*[class*="size-context-"] {
   /* ARCHIVE: Lock formula */
   /* --lock-h0: calc(
     (var(--size-h0-min) * 1rem) +
@@ -143,7 +143,7 @@ body,
   Default use of context values by assigning the appropriate sizes to reusable vars for margins, paddings, ... */
 /* TODO: what vars do we need throughout the app? Isn't --size-h1 -> --size-h8 enough and more declarative? */
 body,
-*[class*='size-context-'] {
+*[class*="size-context-"] {
   /* should have multiple widths (max, measure, aside, min, 0, ?) */
   /* gap is for margins, paddings, grid-gap, ... */
   --gap-relative-s: 0.618em;
@@ -270,6 +270,31 @@ body {
 .size-context-aside {
   --gap-xl: var(--size-h5);
   --gap-s: var(--size-s2);
+}
+
+.size-context-miniature {
+  --size-h0-max: var(--s-1);
+  --size-h0-min: var(--s-2);
+  --size-h1-max: var(--s-2);
+  --size-h1-min: var(--s-3);
+  --size-h2-max: var(--s-3);
+  --size-h2-min: var(--s-4);
+  --size-h3-max: var(--s-4);
+  --size-h3-min: var(--s-5);
+  --size-h4-max: var(--s-5);
+  --size-h4-min: var(--s-6);
+  --size-p-max: var(--s-5);
+  --size-p-min: var(--s-6);
+  --size-h5-max: var(--s-6);
+  --size-h5-min: var(--s-7);
+  --size-h6-max: var(--s-7);
+  --size-h6-min: var(--s-8);
+  --size-h7-max: var(--s-8);
+  --size-h7-min: var(--s-8);
+  --size-h8-max: var(--s-8);
+  --size-h8-min: var(--s-8);
+  --size-h9-max: var(--s-8);
+  --size-h9-min: var(--s-8);
 }
 
 /* 5. ------------------------------------

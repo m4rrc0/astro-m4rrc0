@@ -1,0 +1,33 @@
+---
+import SkeletonLayout from '../../layouts/SkeletonLayout.astro'
+import BasicPageLayout from '../../layouts/BasicPageLayout.astro'
+import SEO from '../../components/SEO.svelte'
+import DemoBoxComplete from '../../components/DemoBoxComplete.svelte'
+import DemoNudsColors from '../../components/DemoNudsColors.svelte'
+---
+
+<SkeletonLayout>
+  <SEO
+    slot="head"
+    lang="en"
+    ogType="website"
+    siteName="m4rr.co"
+    title="NUDS colors"
+    description="A (non designer friendly) color system for your website"
+    canonicalUrl="https://www.m4rr.co/projects/nuds-colors/" />
+
+  <BasicPageLayout>
+    <div class="stack">
+      <h1>NUDS colors</h1>
+        <!-- {[1, 2, 3, 4].map(i => (
+          <DemoBoxComplete {i} />
+        ))} -->
+        <!-- <DemoBoxComplete /> -->
+        <DemoNudsColors client:load />
+    </div>
+  </BasicPageLayout>
+
+</SkeletonLayout>
+
+
+

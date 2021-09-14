@@ -4,8 +4,7 @@ import SkeletonLayout from '../../layouts/SkeletonLayout.astro'
 import BasicPageLayout from '../../layouts/BasicPageLayout.astro'
 import SEO from '../../components/SEO.svelte'
 import Paragraph from '../../partials/styleguide/Paragraph.svelte';
-
-import Debug from 'astro/debug'
+import DemoBoxComplete from '../../components/DemoBoxComplete.svelte'
 
 let list6 = [1, 2, 3, 4, 5, 6];
 ---
@@ -122,47 +121,9 @@ let list6 = [1, 2, 3, 4, 5, 6];
       <section class="stack gap-down" style="--gap-down: 1em;">
         <h2>Colors</h2>
 
-          <!-- <div class={`box stack color-palette-${i}`}>
-            <p class="h3">Color palette {i}</p> -->
-        <!-- {list6.filter(i => i < 4).map(i => ( -->
-          <div class={`box stack color-palette-1`}>
-            <p class="h3">Color palette 1</p>
-            <Paragraph />
-            <p>Don't forget to select some text to test colors</p>
-            <code class="code-block">
-              <pre>
-                <p class="h2">An h2 fox jumps over the fence or whatever</p>
-                <p class="h3">An h3 fox jumps over the fence or whatever</p>
-                <p class="h4">An h4 fox jumps over the fence or whatever</p>
-              </pre>
-            </code>
-            <blockquote>
-              Alway pay attention to the coupling you are introducing in your code
-              base when using specific tools. Ask yourself: "if I want to change
-              this piece, how easy will it be?"
-            </blockquote>
-            <div class="cluster overflow">
-              <ul class="no">
-                <li>
-                  <button>Magnificent</button>
-                </li>
-                <li>
-                  <button class="color-palette-variation-contrast">
-                    Wondeful
-                  </button>
-                </li>
-                <li>
-                  <button class="color-palette-variation-funky">Marvelous</button>
-                </li>
-                <li>
-                  <button class="color-palette-variation-funky-contrast">
-                    Glorious
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-        <!-- ))} -->
+        {[1, 2, 3, 4].map(i => (
+          <DemoBoxComplete {i} />
+        ))}
         
       </section>
     </div>
