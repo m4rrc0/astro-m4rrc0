@@ -1,125 +1,231 @@
 <script>
   import DemoBoxComplete from "./DemoBoxComplete.svelte";
 
-  let userColors = [
-    { name: "white", value: "#ffffff" },
-    { name: "black", value: "#111111" },
-    { name: "dark", value: "#333333" },
-    { name: "grey", value: "#888888" },
-    { name: "red", value: "#ff0000" },
-    { name: "blue", value: "#0000ff" },
-    { name: "green", value: "#00ff00" },
-  ];
+  const removeIndexFromArray = (arr, i) =>
+    arr.filter((element, index) => i !== index);
+
+  const presets = {
+    simple: {
+      userColors: [
+        { name: "light", value: "#ffffff" },
+        { name: "dark", value: "#111111" },
+        { name: "blue", value: "#0000ff" },
+      ],
+      paletteSlots: ["neutral", "primary", "secondary"],
+      palettesNames: ["main"],
+      palettesColors: [["light", "dark", "blue"]],
+      variationsNames: ["classic", "contrast"],
+      variationsCorrespondances: [
+        ["neutral", "primary", "secondary"],
+        ["primary", "neutral", "secondary"],
+      ],
+    },
+    complete: {
+      userColors: [
+        { name: "white", value: "#ffffff" },
+        { name: "black", value: "#111111" },
+        { name: "dark", value: "#333333" },
+        { name: "grey", value: "#888888" },
+        { name: "red", value: "#ff0000" },
+        { name: "blue", value: "#0000ff" },
+        { name: "green", value: "#00ff00" },
+      ],
+      paletteSlots: ["neutral", "primary", "secondary"],
+      palettesNames: ["1", "2"],
+      palettesColors: [
+        ["white", "dark", "grey"],
+        ["black", "red", "green"],
+      ],
+      variationsNames: ["classic", "contrast", "funky", "funky-contrast"],
+      variationsCorrespondances: [
+        ["neutral", "primary", "secondary"],
+        ["primary", "neutral", "secondary"],
+        ["neutral", "secondary", "primary"],
+        ["secondary", "neutral", "primary"],
+      ],
+      colorAssigns: {
+        text: "primary",
+        bg: "neutral",
+        "selection-text": "neutral",
+        "selection-bg": "secondary",
+        "a-text": "text",
+        "a-bg": "bg",
+        "a_hover-text": "secondary",
+        "a_hover-bg": "neutral",
+        "button-text": "text",
+        "button-bg": "bg",
+        "button_hover-text": "secondary",
+        "button_hover-bg": "bg",
+
+        // TODO
+        // "button_disabled-text": "secondary",
+        // "button_disabled-bg": "bg",
+        // "code-text": "bg",
+        // "code-bg": "secondary",
+        // "code-border": "primary",
+
+        // fallbacks are probably fine
+        border: "", // falls back to 'currentcolor'
+        outline: "", // falls back to 'currentcolor'
+        "text-decoration": "", // falls back to 'currentcolor'
+        "text-emphasis": "", // falls back to 'currentcolor'
+        caret: "", // falls back to 'currentcolor'
+        "column-rule": "", // falls back to 'currentcolor'
+      },
+    },
+  };
+  const applyPreset = (presetName) => {
+    const currentPreset = presets[presetName];
+    if (!currentPreset) {
+      error.log(`no preset defined with name ${presetName}`);
+      return null;
+    }
+    userColors = currentPreset.userColors;
+    paletteSlots = currentPreset.paletteSlots;
+    palettesNames = currentPreset.palettesNames;
+    palettesColors = currentPreset.palettesColors;
+    variationsNames = currentPreset.variationsNames;
+    variationsCorrespondances = currentPreset.variationsCorrespondances;
+    colorAssigns = currentPreset.colorAssigns || colorAssigns;
+  };
+
+  // USER COLORS
+  let userColors = presets.complete.userColors;
+
+  const addUserColor = () => {
+    userColors = [...userColors, { name: "white", value: "#ffffff" }];
+  };
+  const removeUserColor = ({ index, name }) => {
+    const r = confirm(`Sure you want to remove color '${name}'?`);
+    if (r == true) {
+      userColors = removeIndexFromArray(userColors, index);
+    }
+  };
 
   $: userColorsString = userColors
     .map(({ name, value }) => `--color-${name}:${value};`)
     .join("");
 
-  let paletteDefs = [
-    {
-      name: "1",
-      def: [
-        { paletteName: "neutral", colorName: "white" },
-        { paletteName: "primary", colorName: "dark" },
-        { paletteName: "secondary", colorName: "grey" },
-      ],
-    },
-    {
-      name: "2",
-      def: [
-        { paletteName: "neutral", colorName: "black" },
-        { paletteName: "primary", colorName: "red" },
-        { paletteName: "secondary", colorName: "green" },
-      ],
-    },
-  ];
+  // PALETTE SLOTS
+  let paletteSlots = presets.complete.paletteSlots;
+  const addPaletteSlot = () => {
+    paletteSlots = [...paletteSlots, "new"];
+    palettesColors = palettesColors.map((paletteColors) => [
+      ...paletteColors,
+      "",
+    ]);
+    variationsCorrespondances = variationsCorrespondances.map(
+      (variationCorrespondances) => [...variationCorrespondances, ""]
+    );
+  };
+  const removePaletteSlot = ({ index, name }) => {
+    const r = confirm(`Sure you want to remove the slot '${name}'?`);
+    if (r == true) {
+      paletteSlots = removeIndexFromArray(paletteSlots, index);
+    }
+  };
+
+  // PALETTES DEFINITIONS
+  let palettesNames = presets.complete.palettesNames;
+  let palettesColors = presets.complete.palettesColors;
+  // let paletteDefs = [
+  //   {
+  //     name: "1",
+  //     def: [
+  //       { slotName: "neutral", colorName: "white" },
+  //       { slotName: "primary", colorName: "dark" },
+  //       { slotName: "secondary", colorName: "grey" },
+  //     ],
+  //   },
+  //   ...
+  // ];
+  $: paletteDefs = palettesNames.map((paletteName, indexOfPalette) => {
+    const def = paletteSlots.map((slotName, indexOfSlot) => ({
+      slotName,
+      colorName: palettesColors[indexOfPalette][indexOfSlot],
+    }));
+    return {
+      name: paletteName,
+      def,
+    };
+  });
+
+  const addPalette = () => {
+    palettesNames = [...palettesNames, `${palettesNames.length + 1}`];
+    palettesColors = [...palettesColors, ["", "", ""]];
+  };
+  const removePalette = ({ index, name }) => {
+    const r = confirm(`Sure you want to remove the palette '${name}'?`);
+    if (r == true) {
+      palettesNames = removeIndexFromArray(palettesNames, index);
+      palettesColors = removeIndexFromArray(palettesColors, index);
+    }
+  };
 
   $: paletteDefStrings = paletteDefs.map(({ name, def }) => ({
     name,
     def,
     string: def
       .map(
-        ({ paletteName, colorName }) =>
-          `--color-${paletteName}-palette: var(--color-${colorName});`
+        ({ slotName, colorName }) =>
+          `--color-${slotName}-palette: var(--color-${colorName});`
       )
       .join(""),
   }));
 
-  let variationDefs = [
-    {
-      name: "classic",
-      def: [
-        { variationName: "neutral", paletteName: "neutral" },
-        { variationName: "primary", paletteName: "primary" },
-        { variationName: "secondary", paletteName: "secondary" },
-      ],
-    },
-    {
-      name: "contrast",
-      def: [
-        { variationName: "neutral", paletteName: "primary" },
-        { variationName: "primary", paletteName: "neutral" },
-        { variationName: "secondary", paletteName: "secondary" },
-      ],
-    },
-    {
-      name: "funky",
-      def: [
-        { variationName: "neutral", paletteName: "neutral" },
-        { variationName: "primary", paletteName: "secondary" },
-        { variationName: "secondary", paletteName: "primary" },
-      ],
-    },
-    {
-      name: "funky-contrast",
-      def: [
-        { variationName: "neutral", paletteName: "secondary" },
-        { variationName: "primary", paletteName: "neutral" },
-        { variationName: "secondary", paletteName: "primary" },
-      ],
-    },
-  ];
+  // VARIATIONS DEFINITIONS
+  let variationsNames = presets.complete.variationsNames;
+  // correspondances against paletteSlots
+  let variationsCorrespondances = presets.complete.variationsCorrespondances;
+  // let variationDefs = [
+  //   {
+  //     name: "classic",
+  //     def: [
+  //       { slotName: "neutral", nameInVariation: "neutral" },
+  //       { slotName: "primary", nameInVariation: "primary" },
+  //       { slotName: "secondary", nameInVariation: "secondary" },
+  //     ],
+  //   },
+  //   ...
+  // ];
+  $: variationDefs = variationsNames.map((variationName, indexOfVariation) => {
+    const def = paletteSlots.map((slotName, indexOfSlot) => ({
+      slotName,
+      nameInVariation: variationsCorrespondances[indexOfVariation][indexOfSlot],
+    }));
+    return {
+      name: variationName,
+      def,
+    };
+  });
+
+  const addVariation = () => {
+    variationsNames = [...variationsNames, `${variationsNames.length + 1}`];
+    variationsCorrespondances = [...variationsCorrespondances, ["", "", ""]];
+  };
+  const removeVariation = ({ index, name }) => {
+    const r = confirm(`Sure you want to remove the variation '${name}'?`);
+    if (r == true) {
+      variationsNames = removeIndexFromArray(variationsNames, index);
+      variationsCorrespondances = removeIndexFromArray(
+        variationsCorrespondances,
+        index
+      );
+    }
+  };
 
   $: variationDefStrings = variationDefs.map(({ name, def }) => ({
     name,
     def,
     string: def
       .map(
-        ({ variationName, paletteName }) =>
-          `--color-${variationName}: var(--color-${paletteName}-palette);`
+        ({ slotName, nameInVariation }) =>
+          `--color-${slotName}: var(--color-${nameInVariation}-palette);`
       )
       .join(""),
   }));
 
-  let colorAssigns = {
-    text: "primary",
-    bg: "neutral",
-    "selection-text": "neutral",
-    "selection-bg": "secondary",
-    "a-text": "text",
-    "a-bg": "bg",
-    "a_hover-text": "secondary",
-    "a_hover-bg": "neutral",
-    "button-text": "text",
-    "button-bg": "bg",
-    "button_hover-text": "secondary",
-    "button_hover-bg": "bg",
-
-    // TODO
-    // "button_disabled-text": "secondary",
-    // "button_disabled-bg": "bg",
-    // "code-text": "bg",
-    // "code-bg": "secondary",
-    // "code-border": "primary",
-
-    // fallbacks are probably fine
-    border: "", // falls back to 'currentcolor'
-    outline: "", // falls back to 'currentcolor'
-    "text-decoration": "", // falls back to 'currentcolor'
-    "text-emphasis": "", // falls back to 'currentcolor'
-    caret: "", // falls back to 'currentcolor'
-    "column-rule": "", // falls back to 'currentcolor'
-  };
+  let colorAssigns = presets.complete.colorAssigns;
 
   $: colorAssignsString = Object.entries(colorAssigns)
     .map(
@@ -172,34 +278,6 @@
 
       `.replace(/(\r\n|\n|\r)/gm, "");
 
-  //   let style = `
-
-  //   /* Let's assign variables to every possible css color property */
-  //   /* ATTENTION: this is also the defaults in case custom properties are not supported */
-  //   color: #111;
-  //   /* will be overridden if custom properties are supported */
-  //   /* we provide a default value here too in case custom properties are supported but the variable is not set for some reason */
-  //   color: var(--color-text, #111);
-  //   background-color: var(--color-bg, transparent);
-  //   /* other properties have a default of 'currentcolor' so we don't have to set a default value if we are fine with that */
-  //   border-color: var(--color-border, currentcolor);
-  //   outline-color: var(--color-outline, currentcolor);
-  //   text-decoration-color: var(--color-text-decoration, currentcolor);
-  //   text-emphasis-color: var(--color-text-emphasis, currentcolor);
-  //   caret-color: var(--color-caret, currentcolor);
-  //   column-rule-color: var(--color-column-rule, currentcolor);
-
-  //   /* assign to all children of a block with a color palette defined */
-  //   color: inherit;
-  //   /* background-color: inherit; */
-  //   border-color: inherit;
-  //   outline-color: inherit;
-  //   text-decoration-color: inherit;
-  //   text-emphasis-color: inherit;
-  //   caret-color: inherit;
-  //   column-rule-color: inherit;
-  // `;
-
   // $: boxStyle = `
   //   /* color PALETTES */
   // /* set initial palette values (same as .color-palette-1) */
@@ -210,7 +288,6 @@
   // /* like */
   // /* --color-neutral: var(--color-neutral-palette); */
   // ${variationDefString}
-
   // `.replace(/(\r\n|\n|\r)/gm, "");
 
   const todoStyles = `
@@ -323,77 +400,154 @@ button[class*='color-palette-'][class*='-contrast'] {
 `;
 </script>
 
-<form>
-  {#each userColors as color, index}
-    <div class="cluster">
+<div class="stack gap-down-h1">
+  <div>
+    <p class="h2">Presets</p>
+    <div class="cluster gap-down-h3">
       <div>
-        <label><input type="text" bind:value={color.name} /></label>
-        <label><input type="color" bind:value={color.value} /></label>
-      </div>
-    </div>
-  {/each}
-  <br />
-  {#each paletteDefs as palette, index}
-    <label>Palette name: <input type="text" bind:value={palette.name} /></label>
-    {#each palette.def as def, index}
-      <div class="cluster">
-        <div>
-          <label><input type="text" bind:value={def.paletteName} /></label>
-          <!-- <label><input type="text" bind:value={def.colorName} /></label> -->
-          <!-- <select bind:value={def.colorName} /> -->
-          <select bind:value={def.colorName}>
-            {#each userColors as color}
-              <option value={color.name}>
-                {color.name}
-              </option>
-            {/each}
-          </select>
-        </div>
-      </div>
-    {/each}
-  {/each}
-  <br />
-  {#each variationDefs as variation, index}
-    <label
-      >Variation name: <input type="text" bind:value={variation.name} /></label
-    >
-    {#each variation.def as def, index}
-      <div class="cluster">
-        <div>
-          <label><input type="text" bind:value={def.variationName} /></label>
-          <label><input type="text" bind:value={def.paletteName} /></label>
-        </div>
-      </div>
-    {/each}
-  {/each}
-  <br />
-
-  {#each paletteDefStrings as palette}
-    <p class="h3">Palette {palette.name}</p>
-    <div class="grid size-context-miniature" {style}>
-      <div
-        style="--width-column: calc(var(--max-width, var(--measure, 38rem)) / 2.1);"
-      >
-        {#each variationDefStrings as variation}
-          <DemoBoxComplete
-            palette={palette.name}
-            variation={variation.name}
-            style={`${palette.string}${variation.string}${colorAssignsString}`}
-          />
+        {#each Object.keys(presets) as presetName}
+          <button on:click={() => applyPreset(presetName)}>{presetName}</button>
         {/each}
       </div>
     </div>
-  {/each}
+  </div>
 
-  {#each Object.entries(colorAssigns) as [property, assignation]}
-    <div class="cluster">
-      <div>
-        <label for={property}>{property}</label>
-        <input type="text" bind:value={colorAssigns[property]} />
+  <div>
+    <p class="h2">Colors to be used</p>
+    {#each userColors as color, index}
+      <div class="cluster gap-down-h3">
+        <div>
+          <label><input type="text" bind:value={color.name} /></label>
+          <label><input type="color" bind:value={color.value} /></label>
+          <button on:click={() => removeUserColor({ index, name: color.name })}
+            >( - )</button
+          >
+        </div>
+      </div>
+    {/each}
+    <div class="">
+      <button on:click={addUserColor}>Add a color</button>
+    </div>
+  </div>
+
+  <div>
+    <p class="h2">Color palette slots</p>
+    {#each paletteSlots as slotName, index}
+      <div class="cluster gap-down-h3">
+        <div>
+          <label><input type="text" bind:value={slotName} /></label>
+          <button on:click={() => removePaletteSlot({ index, name: slotName })}
+            >( - )</button
+          >
+        </div>
+      </div>
+    {/each}
+    <div class="">
+      <button on:click={addPaletteSlot}>Add a color slot in palette</button>
+    </div>
+  </div>
+
+  <div>
+    <p class="h2">Color palettes</p>
+    {#each palettesNames as name, indexOfPalette}
+      <label>Palette name: <input type="text" bind:value={name} /></label>
+      <button on:click={() => removePalette({ index: indexOfPalette, name })}
+        >( - )</button
+      >
+      {#each palettesColors[indexOfPalette] as colorName, indexOfColorInPalette}
+        <div class="cluster gap-down-h3">
+          <div>
+            <span>{paletteSlots[indexOfColorInPalette]}</span>
+            <select bind:value={colorName}>
+              {#each userColors as color}
+                <option value={color.name}>
+                  {color.name}
+                </option>
+              {/each}
+            </select>
+          </div>
+        </div>
+      {/each}
+    {/each}
+    <div class="">
+      <button on:click={addPalette}>Add a color palette</button>
+    </div>
+  </div>
+
+  <div>
+    <p class="h2">Color palette variations</p>
+    <div class="grid gap-down-h8">
+      <div
+        style="--width-column: calc(var(--max-width, var(--measure, 38rem)) / 2.1);"
+      >
+        {#each variationsNames as variationName, indexOfVariation}
+          <div class="box">
+            <label
+              >Variation name: <input
+                type="text"
+                bind:value={variationName}
+              /></label
+            >
+            {#each variationsCorrespondances[indexOfVariation] as corr, indexOfSlotInVariation}
+              <div class="cluster gap-down-h3">
+                <div>
+                  <span>{paletteSlots[indexOfSlotInVariation]}</span>
+                  <select bind:value={corr}>
+                    {#each paletteSlots as paletteSlot}
+                      <option value={paletteSlot}>
+                        {paletteSlot}
+                      </option>
+                    {/each}
+                  </select>
+                </div>
+              </div>
+            {/each}
+            <button
+              on:click={() =>
+                removeVariation({
+                  index: indexOfVariation,
+                  name: variationName,
+                })}>( - )</button
+            >
+          </div>
+        {/each}
       </div>
     </div>
-  {/each}
-</form>
+    <div class="">
+      <button on:click={addVariation}>Add a palette variation</button>
+    </div>
+  </div>
+
+  <div>
+    {#each paletteDefStrings as palette}
+      <p class="h3">Palette {palette.name}</p>
+      <div class="grid size-context-miniature gap-down-h8" {style}>
+        <div
+          style="--width-column: calc(var(--max-width, var(--measure, 38rem)) / 2.1);"
+        >
+          {#each variationDefStrings as variation}
+            <DemoBoxComplete
+              palette={palette.name}
+              variation={variation.name}
+              style={`${palette.string}${variation.string}${colorAssignsString}`}
+            />
+          {/each}
+        </div>
+      </div>
+    {/each}
+  </div>
+
+  <div>
+    {#each Object.entries(colorAssigns) as [property, assignation]}
+      <div class="cluster gap-down-h3">
+        <div>
+          <label for={property}>{property}</label>
+          <input type="text" bind:value={colorAssigns[property]} />
+        </div>
+      </div>
+    {/each}
+  </div>
+</div>
 
 <style>
   input[type="text"] {
